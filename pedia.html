@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>My Webpage</title>
+
+  <style>
+    .error {
+      background-color: red;
+      color: rgb(0, 0, 0);
+      padding: 10px;
+    }
+  </style>
+
+  <script>
+
+    const request = new XMLHttpRequest();
+
+    request.open('GET', 'https://restcountries.com/v3.1/all');
+
+    request.onload = function () {
+      if (request.status === 200) {
+        const data = JSON.parse(request.responseText);
+        const resultElement = document.getElementById('result');
+
+        data.forEach(function (country) {
+          if (country.region !== country.continents[0]) {
+            const listItem = document.createElement('p');
+            listItem.textContent = country.name.official + " - " + country.region + " - " + country.continents[0];
+            resultElement.appendChild(listItem);
+          }
+        });
+
+        const listItem = document.createElement('p');
+        listItem.textContent = '------------------------------------------------------------';
+        resultElement.appendChild(listItem);
+
+      } else {
+        console.log('Error fetching data');
+        const errorParagraph = document.getElementById("error");
+        errorParagraph.classList.add("error");
+        errorParagraph.innerText = "An error has occurred.";
+      }
+    };
+
+    request.onerror = function () {
+      console.log('Network error');
+    };
+
+    request.onprogress = function () {
+      console.log('onprogress');
+    };
+
+    request.send();
+
+  </script>
+
+</head>
+
+<body>
+
+  <div id="result"></div>
+  <div id="error"></div>
+</body>
+
+</html>
